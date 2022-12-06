@@ -5,13 +5,18 @@ package tool.compet.graphics
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Bitmap.CompressFormat
 import android.graphics.BitmapFactory
 import android.graphics.BitmapRegionDecoder
 import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import tool.compet.core.DkFiles
-import java.io.*
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
 
 /**
  * Utility class for Bitmap. Extension of Bitmap is `DkBitmapExt`.
@@ -64,15 +69,20 @@ object DkBitmaps {
 	}
 
 	@Throws(IOException::class)
-	fun save(bitmap: Bitmap, dst: File) {
-		DkFiles.createFile(dst)
-		return save(bitmap, FileOutputStream(dst))
+	fun save(bitmap: Bitmap, toFile: File) {
+		DkFiles.createFile(toFile)
+		return save(bitmap, FileOutputStream(toFile))
 	}
 
 	@Throws(IOException::class)
-	fun save(bitmap: Bitmap, dst: OutputStream) {
-		bitmap.compress(Bitmap.CompressFormat.JPEG, 100, dst)
-		dst.close()
+	fun save(
+		bitmap: Bitmap,
+		os: OutputStream,
+		compressFormat: CompressFormat = CompressFormat.PNG,
+		compressQuantity: Int = 100
+	) {
+		bitmap.compress(compressFormat, compressQuantity, os)
+		os.close()
 	}
 
 	fun load(file: File): Bitmap? {
